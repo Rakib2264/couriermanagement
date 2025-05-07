@@ -50,11 +50,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(
-                Auth::user()->role === 'admin'
-                    ? route('admin.reports')
-                    : route('courier.dashboard')
-            );
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('admin.reports');
+            } else {
+                return redirect()->route('courier.dashboard');
+            }
         }
 
         return back()->withErrors(['email' => 'Invalid credentials']);
